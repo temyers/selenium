@@ -15,6 +15,7 @@
 /**
  * @fileoverview A dialog for editing/creating a link.
  *
+ * @author robbyw@google.com (Robby Walker)
  */
 
 goog.provide('goog.ui.editor.LinkDialog');
@@ -63,7 +64,7 @@ goog.ui.editor.LinkDialog = function(domHelper, link) {
 
   /**
    * The event handler for this dialog.
-   * @type {goog.events.EventHandler.<!goog.ui.editor.LinkDialog>}
+   * @type {goog.events.EventHandler<!goog.ui.editor.LinkDialog>}
    * @private
    */
   this.eventHandler_ = new goog.events.EventHandler(this);
@@ -483,7 +484,7 @@ goog.ui.editor.LinkDialog.prototype.stopReferrerLeaks_ = false;
  * @private
  */
 goog.ui.editor.LinkDialog.prototype.createDialogContent_ = function() {
-  this.textToDisplayDiv_ = /** @type {HTMLDivElement} */(
+  this.textToDisplayDiv_ = /** @type {!HTMLDivElement} */(
       this.buildTextToDisplayDiv_());
   var content = this.dom.createDom(goog.dom.TagName.DIV, null,
       this.textToDisplayDiv_);
@@ -537,7 +538,7 @@ goog.ui.editor.LinkDialog.prototype.buildTextToDisplayDiv_ = function() {
     }
   }, [goog.ui.editor.messages.MSG_TEXT_TO_DISPLAY, goog.string.Unicode.NBSP]);
   goog.dom.safe.setInnerHtml(table.rows[0].cells[0], html);
-  this.textToDisplayInput_ = /** @type {HTMLInputElement} */(
+  this.textToDisplayInput_ = /** @type {!HTMLInputElement} */(
       this.dom.createDom(goog.dom.TagName.INPUT,
           {id: goog.ui.editor.LinkDialog.Id_.TEXT_TO_DISPLAY}));
   var textInput = this.textToDisplayInput_;
@@ -564,7 +565,7 @@ goog.ui.editor.LinkDialog.prototype.buildTextToDisplayDiv_ = function() {
  * @private
  */
 goog.ui.editor.LinkDialog.prototype.buildOpenInNewWindowDiv_ = function() {
-  this.openInNewWindowCheckbox_ = /** @type {HTMLInputElement} */(
+  this.openInNewWindowCheckbox_ = /** @type {!HTMLInputElement} */(
       this.dom.createDom(goog.dom.TagName.INPUT, {'type': 'checkbox'}));
   return this.dom.createDom(goog.dom.TagName.DIV, null,
       this.dom.createDom(goog.dom.TagName.LABEL, null,
@@ -588,7 +589,7 @@ goog.ui.editor.LinkDialog.prototype.buildRelNoFollowDiv_ = function() {
         'linkEnd': '</a>'
       });
 
-  this.relNoFollowCheckbox_ = /** @type {HTMLInputElement} */(
+  this.relNoFollowCheckbox_ = /** @type {!HTMLInputElement} */(
       this.dom.createDom(goog.dom.TagName.INPUT, {'type': 'checkbox'}));
   return this.dom.createDom(goog.dom.TagName.DIV, null,
       this.dom.createDom(goog.dom.TagName.LABEL, null,
@@ -800,7 +801,8 @@ goog.ui.editor.LinkDialog.prototype.syncOkButton_ = function() {
   } else {
     return;
   }
-  this.getOkButtonElement().disabled = goog.string.isEmpty(inputValue);
+  this.getOkButtonElement().disabled =
+      goog.string.isEmptyOrWhitespace(inputValue);
 };
 
 
