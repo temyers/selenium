@@ -18,6 +18,7 @@
 
 goog.provide('fxdriver.error');
 
+goog.require('webdriver.stacktrace');
 
 /**
  * Converts an Error object to a JSON object compatible with WebDriver's remote
@@ -34,34 +35,15 @@ fxdriver.error.toJSON = function(ex) {
   };
 
   if (ex.stack) {
-    var stack = ex.stack.replace(/\s*$/, '').split('\n');
+    var frames = webdriver.stacktrace.parse(ex.stack);
 
-    for (var frame = stack.shift(); frame; frame = stack.shift()) {
-      var methodName;
-      var fileName;
-      var lineNumber;
-      var columnNumber;
-
-      var match = frame.match(/(.*):(\d+):(\d+)$/);
-      if (match) {
-        frame = match[1];
-        lineNumber = Number(match[2]);
-        columnNumber = Number(match[3]);
-      } else {
-        match = frame.match(/(.*):(\d+)$/);
-        frame = match[1];
-        lineNumber = Number(match[2]);
-      }
-
-      match = frame.match(/^([a-zA-Z_$][\w./<$]*)?(?:\(.*\))?@(.+)?$/);
-      if(match){
+    for (var frame = frames.shift(); frame; frame = frames.shift()) {
         stackFrames.push({
-            'methodName': match[1],
-            'fileName': match[2],
-            'lineNumber': lineNumber,
-            'columnNumber': columnNumber
+            'methodName': frame.getName(),
+            'fileName': frame.getUrl(),
+            'lineNumber': frame.getLine(),
+            'columnNumber': frame.getColumn()
         });
-      }
     }
   }
 
