@@ -18,6 +18,11 @@
 
 goog.provide('fxdriver.error');
 
+goog.require('fxdriver.logging');
+goog.require('goog.log');
+
+goog.require('webdriver.stacktrace');
+
 
 /**
  * Converts an Error object to a JSON object compatible with WebDriver's remote
@@ -27,6 +32,9 @@ goog.provide('fxdriver.error');
  * @return {Object} The converted object.
  */
 fxdriver.error.toJSON = function(ex) {
+
+  var log = fxdriver.logging.getLogger('fxdriver.error');
+
   var stackFrames = [];
   var json = {
     'message': ex.message ? ex.message : ex.toString(),
@@ -34,6 +42,7 @@ fxdriver.error.toJSON = function(ex) {
   };
 
   if (ex.stack) {
+
     var stack = ex.stack.replace(/\s*$/, '').split('\n');
 
     for (var frame = stack.shift(); frame; frame = stack.shift()) {
@@ -54,12 +63,17 @@ fxdriver.error.toJSON = function(ex) {
       }
 
       match = frame.match(/^([a-zA-Z_$][\w./<$]*)?(?:\(.*\))?@(.+)?$/);
-      stackFrames.push({
-          'methodName': match[1],
-          'fileName': match[2],
-          'lineNumber': lineNumber,
-          'columnNumber': columnNumber
+      if(match){
+        stackFrames.push({
+            'methodName': match[1],
+            'fileName': match[2],
+            'lineNumber': lineNumber,
+            'columnNumber': columnNumber
         });
+      }else{
+      	// defensive coding.  Prevent Firefox from hanging.
+      	goog.log.error(log, 'Could not parse error stack trace: "' + frame + '".  This is a FirefoxDriver bug.  Please raise a bug report: https://code.google.com/p/selenium/issues/list');
+      }
     }
   }
 

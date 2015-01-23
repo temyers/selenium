@@ -334,7 +334,7 @@ function testParsingLongStackTrace() {
       'longFrame',
       longArg,
       '@http://google.com/somescript:0\n');
-  var frames = webdriver.stacktrace.parse_(stackTrace);
+  var frames = webdriver.stacktrace.parse(stackTrace);
   assertEquals('number of returned frames', 2, frames.length);
   var expected = new webdriver.stacktrace.Frame('', 'shortFrame', '', '');
   assertStackFrame('short frame', frames[0], expected);
@@ -349,7 +349,7 @@ function testRemovesV8MessageHeaderBeforeParsingStack() {
         '    at Color.red (http://x:1234)\n' +
         '    at Foo.bar (http://y:5678)';
 
-  var frames = webdriver.stacktrace.parse_(stack);
+  var frames = webdriver.stacktrace.parse(stack);
   assertEquals(2, frames.length);
   assertEquals('    at Color.red (http://x:1234)', frames[0].toString());
   assertEquals('    at Foo.bar (http://y:5678)', frames[1].toString());
@@ -364,7 +364,7 @@ function testCanParseClosureJsUnitExceptions() {
   var error = new goog.testing.JsUnitException('stub');
   stubs.reset();
 
-  var frames = webdriver.stacktrace.parse_(error.stackTrace);
+  var frames = webdriver.stacktrace.parse(error.stackTrace);
   assertEquals(2, frames.length);
   assertEquals('    at Color.red (http://x:1234)', frames[0].toString());
   assertEquals('    at Foo.bar (http://y:5678)', frames[1].toString());

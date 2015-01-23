@@ -269,7 +269,10 @@ js_library(name = "firefoxdriver",
   ])
 
 js_library(name = "error",
-  srcs = [ "js/error.js", ])
+  srcs = [ "js/error.js", ],
+  deps = [
+    "//javascript/webdriver:base_lib",
+  ])
 
 js_library(name = "events",
   srcs = [ "js/events.js", ])

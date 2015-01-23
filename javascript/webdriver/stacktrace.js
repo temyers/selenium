@@ -107,7 +107,7 @@ webdriver.stacktrace.Snapshot.prototype.parsedStack_ = null;
  */
 webdriver.stacktrace.Snapshot.prototype.getStacktrace = function() {
   if (goog.isNull(this.parsedStack_)) {
-    this.parsedStack_ = webdriver.stacktrace.parse_(this.stack_);
+    this.parsedStack_ = webdriver.stacktrace.parse(this.stack_);
     if (this.slice_) {
       this.parsedStack_ = goog.array.slice(this.parsedStack_, this.slice_);
     }
@@ -591,7 +591,7 @@ webdriver.stacktrace.getStack_ = function(error) {
  */
 webdriver.stacktrace.format = function(error) {
   var stack = webdriver.stacktrace.getStack_(error);
-  var frames = webdriver.stacktrace.parse_(stack);
+  var frames = webdriver.stacktrace.parse(stack);
 
   // If the original stack is in an unexpected format, our formatted stack
   // trace will be a bunch of "    at <anonymous>" lines. If this is the case,
@@ -628,7 +628,7 @@ webdriver.stacktrace.format = function(error) {
  *     unrecognized frames will be nulled out.
  * @private
  */
-webdriver.stacktrace.parse_ = function(stack) {
+webdriver.stacktrace.parse = function(stack) {
   if (!stack) {
     return [];
   }
